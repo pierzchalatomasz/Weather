@@ -1,0 +1,101 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#09C"
+    android:padding="@dimen/widget_margin">
+
+    <TextView
+        android:id="@+id/appwidget_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="8dp"
+        android:background="#09C"
+        android:contentDescription="@string/appwidget_text"
+        android:text="@string/appwidget_text"
+        android:textSize="0sp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="15sp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_height="34sp"
+                app:srcCompat="@drawable/location"
+                android:id="@+id/imageView"
+                android:layout_width="34sp"
+                android:src="@drawable/location"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:text="Gliwice, PL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/appwidget_text"
+                android:layout_toStartOf="@+id/appwidget_text"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:textColor="@android:color/white"
+                android:fontFamily="sans-serif"
+                android:textSize="24sp"
+                android:layout_gravity="center_vertical" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:layout_gravity="center_vertical">
+
+                <TextView
+                    android:text="23 °C"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView2"
+                    android:layout_weight="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:text="Cloudy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView3"
+                    android:layout_weight="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Large"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/weather"
+                android:id="@+id/imageView2"
+                android:layout_weight="1"
+                android:src="@drawable/weather"
+                android:layout_gravity="left" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
