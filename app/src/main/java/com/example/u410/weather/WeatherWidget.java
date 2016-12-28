@@ -1,5 +1,6 @@
 package com.example.u410.weather;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -35,6 +36,8 @@ public class WeatherWidget extends AppWidgetProvider {
             views.setTextViewText(R.id.city, cityName);
         }
 
+        setOnClickWidgetUpdate(context, views, cityName);
+
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -46,9 +49,8 @@ public class WeatherWidget extends AppWidgetProvider {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
 
-        Intent intent = new Intent(context, DataService.class);
-
-        context.startService(intent);
+//        Intent intent = new Intent(context, DataService.class);
+//        context.startService(intent);
     }
 
     @Override
@@ -88,6 +90,13 @@ public class WeatherWidget extends AppWidgetProvider {
 
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
+    }
+
+    private static void setOnClickWidgetUpdate(Context context, RemoteViews views, String cityName) {
+        Intent intent = new Intent(context, DataService.class);
+        intent.putExtra("CITY", cityName);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.mainContainer, pendingIntent);
     }
 
     @Override

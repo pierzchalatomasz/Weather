@@ -44,17 +44,16 @@ public class DataService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-            double lat = 45.294492;
-            double lon = 18.671380;
+            String cityName = intent.getStringExtra("CITY");
 
-            handleCurrentWeather(lon, lat);
-            handleWeatherForecast(lon, lat);
+            handleCurrentWeather(cityName);
+            handleWeatherForecast(cityName);
         }
     }
 
-    private void handleCurrentWeather(double lon, double lat) {
+    private void handleCurrentWeather(String cityName) {
         try {
-            URL address = new URL(endpoint_ + "/weather?lon=" + lon + "&lat=" + lat + "&units=metric&APPID=" + API_KEY);
+            URL address = new URL(endpoint_ + "/weather?q=" + cityName + "&units=metric&APPID=" + API_KEY);
             HttpResponse response = getResponse(address);
             Reader reader = new InputStreamReader(response.getEntity().getContent());
             CurrentWeather currentWeather = gson_.fromJson(reader, CurrentWeather.class);
@@ -66,9 +65,9 @@ public class DataService extends IntentService {
         }
     }
 
-    private void handleWeatherForecast(double lon, double lat) {
+    private void handleWeatherForecast(String cityName) {
         try {
-            URL address = new URL(endpoint_ + "/forecast?lon=" + lon + "&lat=" + lat + "&units=metric&APPID=" + API_KEY);
+            URL address = new URL(endpoint_ + "/forecast?q=" + cityName + "&units=metric&APPID=" + API_KEY);
             HttpResponse response = getResponse(address);
             Reader reader = new InputStreamReader(response.getEntity().getContent());
             WeatherForecast weatherForecast = gson_.fromJson(reader, WeatherForecast.class);
