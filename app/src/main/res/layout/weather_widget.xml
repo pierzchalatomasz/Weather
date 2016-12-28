@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_dark">
+    android:background="@android:color/holo_blue_dark"
+    android:id="@+id/mainContainer">
 
     <LinearLayout
         android:orientation="vertical"
@@ -65,10 +66,12 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
-                android:layout_alignParentTop="true"
+                android:layout_below="@+id/city"
                 android:layout_toRightOf="@+id/currentWeatherDescription"
                 android:layout_toEndOf="@+id/currentWeatherDescription"
-                android:layout_marginTop="10dp">
+                android:textSize="10sp"
+                android:typeface="monospace"
+                android:textStyle="normal|bold">
 
                 <TextView
                     android:text="Wind"
@@ -123,6 +126,16 @@
                     android:layout_alignStart="@+id/currentPressure" />
 
             </RelativeLayout>
+
+            <TextView
+                android:text="Update: 17:00"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/updated"
+                android:textAllCaps="false"
+                android:layout_alignParentTop="true"
+                android:layout_alignLeft="@+id/currentTemperature"
+                android:layout_alignStart="@+id/currentTemperature" />
 
         </RelativeLayout>
 
