@@ -29,9 +29,11 @@ public class WeatherWidget extends AppWidgetProvider {
         views.setImageViewResource(R.id.forecast2Icon, R.drawable.weather);
         views.setImageViewResource(R.id.forecast3Icon, R.drawable.weather);
 
-//        Intent i = new Intent(context, MainActivity.class);
-//        PendingIntent p = PendingIntent.getActivity(context, 0, i, 0);
-//        views.setOnClickPendingIntent(appWidgetId, p);
+        // Get city name from configuration activity (null if user selected "Use Device Location")
+        String cityName = NewAppWidgetConfigureActivity.loadCityNamePref(context, appWidgetId);
+        if (cityName != null) {
+            views.setTextViewText(R.id.city, cityName);
+        }
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
