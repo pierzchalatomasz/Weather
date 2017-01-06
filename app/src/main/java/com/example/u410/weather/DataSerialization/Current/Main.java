@@ -7,9 +7,19 @@ import org.parceler.Parcel;
  */
 @Parcel
 public class Main {
+
     int temp_min;
+
+    int pressure;
+
+    int humidity;
 
     public int getTemp_min() {
         return temp_min;
     }
+
+    public int getPressure() { return pressure; }
+
+    public int getHumidity() { return humidity; }
+
 }

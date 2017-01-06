@@ -66,9 +66,8 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
-                android:layout_below="@+id/city"
-                android:layout_toRightOf="@+id/currentWeatherDescription"
-                android:layout_toEndOf="@+id/currentWeatherDescription"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
                 android:textSize="10sp"
                 android:typeface="monospace"
                 android:textStyle="normal|bold">
@@ -78,8 +77,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/labelWind"
-                    android:layout_alignBaseline="@+id/currentWeatherDescription"
-                    android:layout_alignBottom="@+id/currentWeatherDescription"
                     android:layout_alignLeft="@+id/labelHumidity"
                     android:layout_alignStart="@+id/labelHumidity"
                     android:layout_marginRight="5dp" />
