@@ -16,6 +16,8 @@ public class CurrentWeather {
 
     Main main;
 
+    Wind wind;
+
     public String getName() {
         return name;
     }
@@ -27,5 +29,7 @@ public class CurrentWeather {
     public Main getMain() {
         return main;
     }
+
+    public Wind getWind() { return wind; }
 }
 

@@ -14,6 +14,9 @@ import com.example.u410.weather.DataSerialization.Forecast.WeatherForecast;
 
 import org.parceler.Parcels;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Implementation of App Widget functionality.
  */
@@ -77,9 +80,21 @@ public class WeatherWidget extends AppWidgetProvider {
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.weather_widget);
             views.setTextViewText(R.id.city, currentWeather.getName());
+            views.setTextViewText(R.id.updated, "Update: " + getCurrentTime());
             views.setTextViewText(R.id.currentTemperature, currentWeather.getMain().getTemp_min() + "°C");
+            views.setTextViewText(R.id.currentWeatherDescription, currentWeather.getWeather().get(0).getMain());
+            views.setTextViewText(R.id.currentWind, currentWeather.getWind().getSpeed() + " m/s");
+            views.setTextViewText(R.id.currentHumidity, currentWeather.getMain().getHumidity() + "%");
+            views.setTextViewText(R.id.currentPressure, currentWeather.getMain().getPressure() + " hPa");
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
+    }
+
+    private String getCurrentTime() {
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        String dateString = dateFormat.format(date);
+        return dateString;
     }
 
     private void updateWeatherForecast(Context context, Intent intent, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
