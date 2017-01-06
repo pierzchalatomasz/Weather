@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.example.u410.weather.DataSerialization.Current.CurrentWeather;
+import com.example.u410.weather.DataSerialization.Forecast.ForecastManager;
 import com.example.u410.weather.DataSerialization.Forecast.WeatherForecast;
 
 import org.parceler.Parcels;
@@ -63,10 +64,10 @@ public class WeatherWidget extends AppWidgetProvider {
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(name);
 
         if (intent != null) {
-            if (intent.getAction() == "CURRENT_WEATHER") {
+            if (intent.getAction() == IntentExtras.CURRENT_WEATHER) {
                 updateCurrentWeather(context, intent, appWidgetManager, appWidgetIds);
             }
-            else if (intent.getAction() == "WEATHER_FORECAST") {
+            else if (intent.getAction() == IntentExtras.WEATHER_FORECAST) {
                 updateWeatherForecast(context, intent, appWidgetManager, appWidgetIds);
             }
         }
@@ -76,7 +77,7 @@ public class WeatherWidget extends AppWidgetProvider {
 
     private void updateCurrentWeather(Context context, Intent intent, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            CurrentWeather currentWeather = Parcels.unwrap(intent.getParcelableExtra("CURRENT_WEATHER"));
+            CurrentWeather currentWeather = Parcels.unwrap(intent.getParcelableExtra(IntentExtras.CURRENT_WEATHER));
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.weather_widget);
             views.setTextViewText(R.id.city, currentWeather.getName());
@@ -99,20 +100,24 @@ public class WeatherWidget extends AppWidgetProvider {
 
     private void updateWeatherForecast(Context context, Intent intent, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            WeatherForecast weatherForecast = Parcels.unwrap(intent.getParcelableExtra("WEATHER_FORECAST"));
+            WeatherForecast weatherForecast = Parcels.unwrap(intent.getParcelableExtra(IntentExtras.WEATHER_FORECAST));
+            ForecastManager forecastManager = new ForecastManager(weatherForecast);
+
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.weather_widget);
-            //views.setTextViewText(R.id.forecast1Day, weatherForecast.getList().get(0).getMain().getTemp_min()+"");
-            views.setTextViewText(R.id.forecast1Day, "Mon");
-            views.setTextViewText(R.id.forecast2Day, "Tue");
-            views.setTextViewText(R.id.forecast3Day, "Wed");
+            views.setTextViewText(R.id.forecast1Day, forecastManager.getDayName(1));
+            views.setTextViewText(R.id.forecast1Temperature, forecastManager.getTemperatureForDay(1));
+            views.setTextViewText(R.id.forecast2Day, forecastManager.getDayName(2));
+            views.setTextViewText(R.id.forecast2Temperature, forecastManager.getTemperatureForDay(2));
+            views.setTextViewText(R.id.forecast3Day, forecastManager.getDayName(3));
+            views.setTextViewText(R.id.forecast3Temperature, forecastManager.getTemperatureForDay(3));
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
     }
 
     private static void setOnClickWidgetUpdate(Context context, RemoteViews views, String cityName) {
         Intent intent = new Intent(context, DataService.class);
-        intent.putExtra("CITY", cityName);
+        intent.putExtra(IntentExtras.CITY, cityName);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.mainContainer, pendingIntent);
     }

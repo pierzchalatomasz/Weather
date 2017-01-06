@@ -11,7 +11,7 @@ import java.util.ArrayList;
 @Parcel
 public class WeatherForecast {
 
-    ArrayList<List> list;
+    private ArrayList<List> list;
 
     public ArrayList<List> getList() { return list; }
 

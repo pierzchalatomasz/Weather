@@ -58,7 +58,7 @@ public class DataService extends IntentService {
             Reader reader = new InputStreamReader(response.getEntity().getContent());
             CurrentWeather currentWeather = gson_.fromJson(reader, CurrentWeather.class);
 
-            broadcastData("CURRENT_WEATHER", Parcels.wrap(currentWeather));
+            broadcastData(IntentExtras.CURRENT_WEATHER, Parcels.wrap(currentWeather));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -67,12 +67,12 @@ public class DataService extends IntentService {
 
     private void handleWeatherForecast(String cityName) {
         try {
-            URL address = new URL(endpoint_ + "/forecast?q=" + cityName + "&units=metric&cnt=" + forecastDaysNumber_ + "&APPID=" + API_KEY);
+            URL address = new URL(endpoint_ + "/forecast/daily?q=" + cityName + "&units=metric&cnt=" + forecastDaysNumber_ + "&APPID=" + API_KEY);
             HttpResponse response = getResponse(address);
             Reader reader = new InputStreamReader(response.getEntity().getContent());
             WeatherForecast weatherForecast = gson_.fromJson(reader, WeatherForecast.class);
 
-            broadcastData("WEATHER_FORECAST", Parcels.wrap(weatherForecast));
+            broadcastData(IntentExtras.WEATHER_FORECAST, Parcels.wrap(weatherForecast));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -101,7 +101,8 @@ public class DataService extends IntentService {
         int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), WeatherWidget.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
 
-        intent.putExtra("CURRENT_WEATHER", parcel);
+        intent.putExtra(IntentExtras.CURRENT_WEATHER, parcel);
+        intent.putExtra(IntentExtras.WEATHER_FORECAST, parcel);
         sendBroadcast(intent);
     }
 
@@ -109,7 +110,7 @@ public class DataService extends IntentService {
 
     private String API_KEY = "41fae9dcd05e0fcbf176197ce26531e2";
 
-    private String forecastDaysNumber_ = "3";
+    private String forecastDaysNumber_ = "4";
 
     private Gson gson_ = new Gson();
 }

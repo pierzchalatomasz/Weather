@@ -9,8 +9,12 @@ import org.parceler.Parcel;
 @Parcel
 public class List {
 
-    Main main;
+    private Temp temp;
 
-    public Main getMain() { return main; }
+    private int dt;
+
+    public Temp getTemp() { return temp; }
+
+    public int getDt() { return dt; }
 
 }
