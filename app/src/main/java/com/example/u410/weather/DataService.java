@@ -67,7 +67,7 @@ public class DataService extends IntentService {
 
     private void handleWeatherForecast(String cityName) {
         try {
-            URL address = new URL(endpoint_ + "/forecast?q=" + cityName + "&units=metric&APPID=" + API_KEY);
+            URL address = new URL(endpoint_ + "/forecast?q=" + cityName + "&units=metric&cnt=" + forecastDaysNumber_ + "&APPID=" + API_KEY);
             HttpResponse response = getResponse(address);
             Reader reader = new InputStreamReader(response.getEntity().getContent());
             WeatherForecast weatherForecast = gson_.fromJson(reader, WeatherForecast.class);
@@ -108,6 +108,8 @@ public class DataService extends IntentService {
     private String endpoint_ = "http://api.openweathermap.org/data/2.5";
 
     private String API_KEY = "41fae9dcd05e0fcbf176197ce26531e2";
+
+    private String forecastDaysNumber_ = "3";
 
     private Gson gson_ = new Gson();
 }

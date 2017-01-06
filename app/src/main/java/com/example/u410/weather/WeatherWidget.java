@@ -87,7 +87,10 @@ public class WeatherWidget extends AppWidgetProvider {
             WeatherForecast weatherForecast = Parcels.unwrap(intent.getParcelableExtra("WEATHER_FORECAST"));
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.weather_widget);
-
+            //views.setTextViewText(R.id.forecast1Day, weatherForecast.getList().get(0).getMain().getTemp_min()+"");
+            views.setTextViewText(R.id.forecast1Day, "Mon");
+            views.setTextViewText(R.id.forecast2Day, "Tue");
+            views.setTextViewText(R.id.forecast3Day, "Wed");
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
     }
