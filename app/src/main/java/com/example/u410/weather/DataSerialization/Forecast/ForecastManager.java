@@ -1,6 +1,5 @@
 package com.example.u410.weather.DataSerialization.Forecast;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +19,7 @@ public class ForecastManager {
 
     }
 
-    public String getTemperatureForDay(int nextDay) {
+    public String getTemperature(int nextDay) {
 
         try {
             Temp temperatures = days.get(nextDay).getTemp();
@@ -44,6 +43,11 @@ public class ForecastManager {
             return "---";
         }
 
+    }
+
+    public int getWeatherId(int forecastedDay) {
+        int imageId = days.get(forecastedDay).getWeather().get(0).getId();
+        return imageId;
     }
 
 }

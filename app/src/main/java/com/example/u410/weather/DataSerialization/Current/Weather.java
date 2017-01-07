@@ -7,7 +7,12 @@ import org.parceler.Parcel;
  */
 @Parcel
 public class Weather {
-    String main;
+
+    private int id;
+
+    private String main;
+
+    public int getId() { return id; }
 
     public String getMain() {
         return main;

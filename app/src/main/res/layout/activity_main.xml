@@ -19,7 +19,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="288dp"
-            app:srcCompat="@drawable/weather"
+            app:srcCompat="@drawable/clouds"
             android:id="@+id/imageView2" />
 
         <TextView
