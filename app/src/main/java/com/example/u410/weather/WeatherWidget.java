@@ -103,19 +103,26 @@ public class WeatherWidget extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             WeatherForecast weatherForecast = Parcels.unwrap(intent.getParcelableExtra(IntentExtras.WEATHER_FORECAST));
             ForecastManager forecastManager = new ForecastManager(weatherForecast);
+            int weatherId, forecastedDay;
 
-
+            forecastedDay = 1;
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.weather_widget);
-            views.setTextViewText(R.id.forecast1Day, forecastManager.getDayName(1));
-            views.setTextViewText(R.id.forecast1Temperature, forecastManager.getTemperatureForDay(1));
-            views.setImageViewResource(R.id.forecast1Icon, WeatherIconManager.getImageIdByWeatherId(weatherForecast.getList().get(1).getWeather().get(0).getId()));
-            views.setTextViewText(R.id.forecast2Day, forecastManager.getDayName(2));
-            views.setTextViewText(R.id.forecast2Temperature, forecastManager.getTemperatureForDay(2));
-            views.setImageViewResource(R.id.forecast2Icon, WeatherIconManager.getImageIdByWeatherId(weatherForecast.getList().get(2).getWeather().get(0).getId()));
+            views.setTextViewText(R.id.forecast1Day, forecastManager.getDayName(forecastedDay));
+            views.setTextViewText(R.id.forecast1Temperature, forecastManager.getTemperature(forecastedDay));
+            weatherId = forecastManager.getWeatherId(forecastedDay);
+            views.setImageViewResource(R.id.forecast1Icon, WeatherIconManager.getImageIdByWeatherId(weatherId));
 
-            views.setTextViewText(R.id.forecast3Day, forecastManager.getDayName(3));
-            views.setTextViewText(R.id.forecast3Temperature, forecastManager.getTemperatureForDay(3));
-            views.setImageViewResource(R.id.forecast3Icon, WeatherIconManager.getImageIdByWeatherId(weatherForecast.getList().get(3).getWeather().get(0).getId()));
+            forecastedDay = 2;
+            views.setTextViewText(R.id.forecast2Day, forecastManager.getDayName(forecastedDay));
+            views.setTextViewText(R.id.forecast2Temperature, forecastManager.getTemperature(forecastedDay));
+            weatherId = forecastManager.getWeatherId(forecastedDay);
+            views.setImageViewResource(R.id.forecast2Icon, WeatherIconManager.getImageIdByWeatherId(weatherId));
+
+            forecastedDay = 3;
+            views.setTextViewText(R.id.forecast3Day, forecastManager.getDayName(forecastedDay));
+            views.setTextViewText(R.id.forecast3Temperature, forecastManager.getTemperature(forecastedDay));
+            weatherId = forecastManager.getWeatherId(forecastedDay);
+            views.setImageViewResource(R.id.forecast3Icon, WeatherIconManager.getImageIdByWeatherId(weatherId));
 
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
