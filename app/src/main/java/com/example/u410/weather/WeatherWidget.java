@@ -29,10 +29,10 @@ public class WeatherWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.weather_widget);
 
-        views.setImageViewResource(R.id.currentWeatherIcon, R.drawable.weather);
-        views.setImageViewResource(R.id.forecast1Icon, R.drawable.weather);
-        views.setImageViewResource(R.id.forecast2Icon, R.drawable.weather);
-        views.setImageViewResource(R.id.forecast3Icon, R.drawable.weather);
+        views.setImageViewResource(R.id.currentWeatherIcon, R.drawable.clouds);
+        views.setImageViewResource(R.id.forecast1Icon, R.drawable.clouds);
+        views.setImageViewResource(R.id.forecast2Icon, R.drawable.clouds);
+        views.setImageViewResource(R.id.forecast3Icon, R.drawable.clouds);
 
         // Get city name from configuration activity (null if user selected "Use Device Location")
         String cityName = NewAppWidgetConfigureActivity.loadCityNamePref(context, appWidgetId);
