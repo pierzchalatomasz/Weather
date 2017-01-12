@@ -45,34 +45,35 @@ public class DataService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             String cityName = intent.getStringExtra("CITY");
+            int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0);
 
-            handleCurrentWeather(cityName);
-            handleWeatherForecast(cityName);
+            handleCurrentWeather(cityName, widgetId);
+            handleWeatherForecast(cityName, widgetId);
         }
     }
 
-    private void handleCurrentWeather(String cityName) {
+    private void handleCurrentWeather(String cityName, int widgetId) {
         try {
             URL address = new URL(endpoint_ + "/weather?q=" + cityName + "&units=metric&APPID=" + API_KEY);
             HttpResponse response = getResponse(address);
             Reader reader = new InputStreamReader(response.getEntity().getContent());
             CurrentWeather currentWeather = gson_.fromJson(reader, CurrentWeather.class);
 
-            broadcastData(IntentExtras.CURRENT_WEATHER, Parcels.wrap(currentWeather));
+            broadcastData(IntentExtras.CURRENT_WEATHER, Parcels.wrap(currentWeather), widgetId);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void handleWeatherForecast(String cityName) {
+    private void handleWeatherForecast(String cityName, int widgetId) {
         try {
             URL address = new URL(endpoint_ + "/forecast/daily?q=" + cityName + "&units=metric&cnt=" + forecastDaysNumber_ + "&APPID=" + API_KEY);
             HttpResponse response = getResponse(address);
             Reader reader = new InputStreamReader(response.getEntity().getContent());
             WeatherForecast weatherForecast = gson_.fromJson(reader, WeatherForecast.class);
 
-            broadcastData(IntentExtras.WEATHER_FORECAST, Parcels.wrap(weatherForecast));
+            broadcastData(IntentExtras.WEATHER_FORECAST, Parcels.wrap(weatherForecast), widgetId);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -94,12 +95,14 @@ public class DataService extends IntentService {
         return response;
     }
 
-    private void broadcastData(String action, Parcelable parcel) {
+    private void broadcastData(String action, Parcelable parcel, int widgetId) {
         Intent intent = new Intent(this, WeatherWidget.class);
         intent.setAction(action);
 
         int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), WeatherWidget.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
 
         intent.putExtra(IntentExtras.CURRENT_WEATHER, parcel);
         intent.putExtra(IntentExtras.WEATHER_FORECAST, parcel);
