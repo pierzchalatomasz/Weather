@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -25,6 +26,16 @@ import java.util.Date;
  * Implementation of App Widget functionality.
  */
 public class WeatherWidget extends AppWidgetProvider {
+    private Handler updateWidgetHandler;
+    private Runnable updateWidgetTask;
+    private final static int INTERVAL = 1000 * 60 * 30;
+    private Context context;
+    public static String cityName = "Gliwice";
+
+    public WeatherWidget()
+    {
+        updateWidgetHandler = new Handler();
+    }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
@@ -41,6 +52,7 @@ public class WeatherWidget extends AppWidgetProvider {
         String cityName = getWidgetCity(context, appWidgetId) != null ? getWidgetCity(context, appWidgetId) :
                 NewAppWidgetConfigureActivity.loadCityNamePref(context, appWidgetId);
 
+        WeatherWidget.cityName = cityName;
         views.setTextViewText(R.id.city, cityName);
         saveWidgetCity(context, appWidgetId, cityName);
 
@@ -56,6 +68,16 @@ public class WeatherWidget extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
+        this.context = context;
+
+        updateWidgetTask = new Runnable()
+        {
+            @Override
+            public void run() {
+                updateWidgetCyclic();
+            }
+        };
+        startRepeatingTask();
     }
 
     @Override
@@ -171,6 +193,23 @@ public class WeatherWidget extends AppWidgetProvider {
         }
 
         super.onDeleted(context, appWidgetIds);
+        this.context = null;
+        stopRepeatingTask();
+    }
+    private void startRepeatingTask()
+    {
+        updateWidgetTask.run();
+    }
+    private void stopRepeatingTask()
+    {
+        updateWidgetHandler.removeCallbacksAndMessages(updateWidgetTask);
+    }
+    private void updateWidgetCyclic()
+    {
+        Intent intent = new Intent(context, DataService.class);
+        intent.putExtra(IntentExtras.CITY, cityName);
+        context.startService(intent);
+        updateWidgetHandler.postDelayed(updateWidgetTask, INTERVAL);
     }
 }
 
