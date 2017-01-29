@@ -1,14 +1,17 @@
 package com.example.u410.weather;
 
+import android.Manifest;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -24,15 +27,30 @@ import static android.content.ContentValues.TAG;
 public class NewAppWidgetConfigureActivity extends Activity {
 
     private static final String PREFS_NAME = "com.example.u410.weather.WeatherWidget";
-    private static final String PREF_PREFIX_KEY = "appwidget_";
+    private static final String CITY_KEY = "city_";
+    private static final String DEVICE_LOCATION = "device_location_";
+    private static final int TAG_CODE_PERMISSION_LOCATION = 0;
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     private String cityName_;
+    private boolean deviceLocation_ = false;
 
     private PlaceAutocompleteFragment placeAutocompleteFragment;
 
-    View.OnClickListener mOnClickListener = new View.OnClickListener() {
+    private View.OnClickListener setCityClickListener = new View.OnClickListener() {
         public void onClick(View v) {
+            createNewWidget();
+        }
+    };
+
+    private View.OnClickListener setUseDeviceLocationClickListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            ActivityCompat.requestPermissions(NewAppWidgetConfigureActivity.this, new String[] {
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION },
+                    TAG_CODE_PERMISSION_LOCATION);
+
+            deviceLocation_ = true;
             createNewWidget();
         }
     };
@@ -45,7 +63,7 @@ public class NewAppWidgetConfigureActivity extends Activity {
         final Context context = NewAppWidgetConfigureActivity.this;
 
         // When the button is clicked, store the string locally
-        saveCityNamePref(context, mAppWidgetId, cityName_);
+        savePrefs(context, mAppWidgetId, cityName_, deviceLocation_);
 
         // It is the responsibility of the configuration activity to update the app widget
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -59,9 +77,10 @@ public class NewAppWidgetConfigureActivity extends Activity {
     }
 
     // Write the prefix to the SharedPreferences object for this widget
-    static void saveCityNamePref(Context context, int appWidgetId, String text) {
+    static void savePrefs(Context context, int appWidgetId, String city, boolean deviceLocation) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.putString(PREF_PREFIX_KEY + appWidgetId, text);
+        prefs.putString(CITY_KEY + appWidgetId, city);
+        prefs.putBoolean(DEVICE_LOCATION + appWidgetId, deviceLocation);
         prefs.apply();
     }
 
@@ -69,9 +88,16 @@ public class NewAppWidgetConfigureActivity extends Activity {
     // If there is no preference saved, get the default from a resource
     static String loadCityNamePref(Context context, int appWidgetId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        String titleValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId, null);
+        String titleValue = prefs.getString(CITY_KEY + appWidgetId, null);
 
         return titleValue;
+    }
+
+    static boolean loadUseDeviceLocationPref(Context context, int appWidgetId) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        boolean value = prefs.getBoolean(DEVICE_LOCATION + appWidgetId, false);
+
+        return value;
     }
 
     @Override
@@ -83,8 +109,8 @@ public class NewAppWidgetConfigureActivity extends Activity {
         setResult(RESULT_CANCELED);
 
         setContentView(R.layout.new_app_widget_configure);
-        findViewById(R.id.useDeviceLocation).setOnClickListener(mOnClickListener);
-        findViewById(R.id.setTheCity).setOnClickListener(mOnClickListener);
+        findViewById(R.id.useDeviceLocation).setOnClickListener(setUseDeviceLocationClickListener);
+        findViewById(R.id.setTheCity).setOnClickListener(setCityClickListener);
 
         initPlaceAutocompleteFragment();
 

@@ -8,6 +8,7 @@ public class IntentExtras {
 
     static final String CURRENT_WEATHER = "CURRENT_WEATHER";
     static final String WEATHER_FORECAST = "WEATHER_FORECAST";
+    static final String WEATHER_UPDATE = "WEATHER_UPDATE";
     static final String CITY = "CITY";
 
 

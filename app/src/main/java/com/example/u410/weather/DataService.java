@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.u410.weather.DataSerialization.Current.CurrentWeather;
 import com.example.u410.weather.DataSerialization.Forecast.WeatherForecast;
@@ -37,47 +38,69 @@ import java.util.Locale;
  * <p>
  */
 public class DataService extends IntentService {
+    private Location location;
+
     public DataService() {
         super("DataService");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            String cityName = intent.getStringExtra("CITY");
-            int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0);
+        if (intent == null) {
+            return;
+        }
 
-            handleCurrentWeather(cityName, widgetId);
-            handleWeatherForecast(cityName, widgetId);
+        String cityName = intent.getStringExtra(IntentExtras.CITY);
+
+        // XXX
+        // Use city name from location if cityName is null
+        // Occurs when user adds widget with internet connection closed
+        if (cityName == null) {
+            location = new Location(getApplicationContext());
+            location.assignPlace();
+            cityName = location.getCityName();
+        }
+
+        int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0);
+
+        CurrentWeather currentWeather = getCurrentWeather(cityName);
+        WeatherForecast weatherForecast = getWeatherForecast(cityName);
+
+        if (currentWeather != null && weatherForecast != null) {
+            broadcastData(Parcels.wrap(currentWeather), Parcels.wrap(weatherForecast), widgetId);
         }
     }
 
-    private void handleCurrentWeather(String cityName, int widgetId) {
+    private CurrentWeather getCurrentWeather(String cityName) {
+        CurrentWeather currentWeather = null;
+
         try {
             URL address = new URL(endpoint_ + "/weather?q=" + cityName + "&units=metric&APPID=" + API_KEY);
             HttpResponse response = getResponse(address);
             Reader reader = new InputStreamReader(response.getEntity().getContent());
-            CurrentWeather currentWeather = gson_.fromJson(reader, CurrentWeather.class);
-
-            broadcastData(IntentExtras.CURRENT_WEATHER, Parcels.wrap(currentWeather), widgetId);
+            currentWeather = gson_.fromJson(reader, CurrentWeather.class);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            handleError(e);
         }
+
+        return currentWeather;
     }
 
-    private void handleWeatherForecast(String cityName, int widgetId) {
+    private WeatherForecast getWeatherForecast(String cityName) {
+        WeatherForecast weatherForecast = null;
+
         try {
             URL address = new URL(endpoint_ + "/forecast/daily?q=" + cityName + "&units=metric&cnt=" + forecastDaysNumber_ + "&APPID=" + API_KEY);
             HttpResponse response = getResponse(address);
             Reader reader = new InputStreamReader(response.getEntity().getContent());
-            WeatherForecast weatherForecast = gson_.fromJson(reader, WeatherForecast.class);
-
-            broadcastData(IntentExtras.WEATHER_FORECAST, Parcels.wrap(weatherForecast), widgetId);
+            weatherForecast = gson_.fromJson(reader, WeatherForecast.class);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            handleError(e);
         }
+
+        return weatherForecast;
     }
 
     private HttpResponse getResponse(URL address) {
@@ -89,24 +112,29 @@ public class DataService extends IntentService {
             response = httpClient.execute(httpget);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            handleError(e);
         }
 
         return response;
     }
 
-    private void broadcastData(String action, Parcelable parcel, int widgetId) {
+    private void broadcastData(Parcelable currentWeather, Parcelable weatherForecast, int widgetId) {
         Intent intent = new Intent(this, WeatherWidget.class);
-        intent.setAction(action);
+        intent.setAction(IntentExtras.WEATHER_UPDATE);
 
         int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), WeatherWidget.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
 
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
 
-        intent.putExtra(IntentExtras.CURRENT_WEATHER, parcel);
-        intent.putExtra(IntentExtras.WEATHER_FORECAST, parcel);
+        intent.putExtra(IntentExtras.CURRENT_WEATHER, currentWeather);
+        intent.putExtra(IntentExtras.WEATHER_FORECAST, weatherForecast);
         sendBroadcast(intent);
+    }
+
+    private void handleError(Exception e) {
+        Toast.makeText(getApplicationContext(), "Nieudana próba połączenia!", Toast.LENGTH_SHORT).show();
+        e.printStackTrace();
     }
 
     private String endpoint_ = "http://api.openweathermap.org/data/2.5";

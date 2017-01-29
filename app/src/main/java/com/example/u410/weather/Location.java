@@ -5,7 +5,8 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
-import java.io.IOException;
+import android.widget.Toast;
+
 import java.util.List;
 import java.util.Locale;
 import static android.content.Context.LOCATION_SERVICE;
@@ -53,7 +54,7 @@ public class Location
         }
        catch(SecurityException e)
        {
-
+            e.printStackTrace();
        }
     }
 
@@ -69,9 +70,10 @@ public class Location
             countryName = addresses.get(0).getCountryName();
             postalCode = addresses.get(0).getPostalCode();
         }
-        catch(IOException e)
+        catch(Exception e)
         {
-
+            Toast.makeText(ctx, "Próba ustalenia lokalizacji urządzenia zakończona niepowodzeniem!", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
 
