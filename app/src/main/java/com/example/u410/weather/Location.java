@@ -72,7 +72,6 @@ public class Location
         }
         catch(Exception e)
         {
-            Toast.makeText(ctx, "Próba ustalenia lokalizacji urządzenia zakończona niepowodzeniem!", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }

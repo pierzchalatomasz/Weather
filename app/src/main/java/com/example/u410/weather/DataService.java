@@ -133,7 +133,6 @@ public class DataService extends IntentService {
     }
 
     private void handleError(Exception e) {
-        Toast.makeText(getApplicationContext(), "Nieudana próba połączenia!", Toast.LENGTH_SHORT).show();
         e.printStackTrace();
     }
 
