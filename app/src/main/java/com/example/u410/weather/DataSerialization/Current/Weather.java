@@ -12,9 +12,15 @@ public class Weather {
 
     private String main;
 
+    private String description;
+
     public int getId() { return id; }
 
     public String getMain() {
         return main;
+    }
+
+    public String getDesc() {
+        return description;
     }
 }

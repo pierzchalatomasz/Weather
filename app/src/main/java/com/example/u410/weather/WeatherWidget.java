@@ -92,12 +92,7 @@ public class WeatherWidget extends AppWidgetProvider {
         String cityName = citySharedPreferences.getWidgetCity(context, appWidgetId) != null ?
                 citySharedPreferences.getWidgetCity(context, appWidgetId) :
                 NewAppWidgetConfigureActivity.loadCityNamePref(context, appWidgetId);
-        boolean useDeviceLocation = NewAppWidgetConfigureActivity.loadUseDeviceLocationPref(context, appWidgetId);
 
-//        location = new Location(context);
-//        location.assignPlace();
-//
-//        return useDeviceLocation ? location.getCityName() : cityName ;
         return cityName;
     }
 
