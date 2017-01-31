@@ -1,0 +1,5 @@
+<resources>
+    <string name="update">Pobrano</string>
+    <string name="wind">Wiatr</string>
+    <string name="hum">Wilg</string>
+</resources>

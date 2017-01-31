@@ -39,6 +39,7 @@ import java.util.Locale;
  */
 public class DataService extends IntentService {
     private Location location;
+    private String lang = "pl";
 
     public DataService() {
         super("DataService");
@@ -75,7 +76,7 @@ public class DataService extends IntentService {
         CurrentWeather currentWeather = null;
 
         try {
-            URL address = new URL(endpoint_ + "/weather?q=" + cityName + "&units=metric&APPID=" + API_KEY);
+            URL address = new URL(endpoint_ + "/weather?q=" + cityName + "&lang=" + lang + "&units=metric&APPID=" + API_KEY);
             HttpResponse response = getResponse(address);
             Reader reader = new InputStreamReader(response.getEntity().getContent());
             currentWeather = gson_.fromJson(reader, CurrentWeather.class);

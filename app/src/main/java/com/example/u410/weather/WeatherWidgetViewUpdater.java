@@ -22,8 +22,11 @@ import java.util.Date;
  */
 
 public class WeatherWidgetViewUpdater {
+    private Context context;
+
     public void init(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, String cityName) {
+        this.context = context;
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.weather_widget);
@@ -91,7 +94,7 @@ public class WeatherWidgetViewUpdater {
 
         views.setImageViewResource(R.id.currentWeatherIcon, WeatherIconManager.getImageIdByWeatherId(currentWeather.getWeather().get(0).getId()));
         views.setTextViewText(R.id.city, currentWeather.getName());
-        views.setTextViewText(R.id.updated, "Update: " + getCurrentTime());
+        views.setTextViewText(R.id.updated, context.getResources().getString(R.string.update) + ": " + getCurrentTime());
         views.setTextViewText(R.id.currentTemperature, currentWeather.getMain().getTemp_min() + "°C");
         views.setTextViewText(R.id.currentWeatherDescription, currentWeather.getWeather().get(0).getDesc());
         views.setTextViewText(R.id.currentWind, currentWeather.getWind().getSpeed() + " m/s");

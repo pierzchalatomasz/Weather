@@ -73,7 +73,7 @@
                 android:textStyle="normal|bold">
 
                 <TextView
-                    android:text="Wind"
+                    android:text="@string/wind"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/labelWind"
@@ -113,7 +113,7 @@
                     android:layout_marginTop="15dp" />
 
                 <TextView
-                    android:text="Hum"
+                    android:text="@string/hum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/labelHumidity"
